@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  /* No network font fetch (offline-safe). Geometric-leaning system stack. */
+  --font-sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial,
+    sans-serif;
+}
+
+.dark {
+  --background: #0b1120;
+  --foreground: #e2e8f0;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Smooth theme switch */
+* {
+  transition-property: background-color, border-color;
+  transition-duration: 150ms;
+}
+
+/* Native form controls follow theme (date/time pickers, select arrows) */
+.dark input,
+.dark select,
+.dark textarea {
+  color-scheme: dark;
+}
