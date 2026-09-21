@@ -16,10 +16,8 @@ export default function PageHeader({
   return (
     <header className="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-brass">
-          {eyebrow}
-        </p>
-        <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
+        <p className="text-xs font-medium text-slate-400 dark:text-slate-500">{eyebrow}</p>
+        <h1 className="mt-0.5 text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
           {title}
         </h1>
         {count != null ? (

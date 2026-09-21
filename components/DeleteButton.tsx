@@ -1,43 +1,65 @@
 "use client";
 
-import { useState } from "react";
+import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
+import { deleteProperty } from "@/app/actions/properties";
+import { deleteClient } from "@/app/actions/clients";
+import { deleteAppointment } from "@/app/actions/appointments";
+import { deleteDemand } from "@/app/actions/demands";
+import { deleteActivity } from "@/app/actions/activities";
+import { cn } from "@/lib/utils";
+
+const actions = {
+  property: deleteProperty,
+  client: deleteClient,
+  appointment: deleteAppointment,
+  demand: deleteDemand,
+  activity: deleteActivity,
+};
 
 export default function DeleteButton({
-  table,
+  kind,
   id,
   confirmText = "Bu kaydı silmek istediğinize emin misiniz?",
   label = "Sil",
+  redirectTo,
+  className,
 }: {
-  table: "properties" | "clients" | "appointments";
+  kind: keyof typeof actions;
   id: string;
   confirmText?: string;
   label?: string;
+  redirectTo?: string;
+  className?: string;
 }) {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [pending, start] = useTransition();
 
-  async function onDelete() {
+  function onDelete() {
     if (!window.confirm(confirmText)) return;
-    setLoading(true);
-    const supabase = createClient();
-    const { error } = await supabase.from(table).delete().eq("id", id);
-    setLoading(false);
-    if (error) {
-      window.alert(`Silinemedi: ${error.message}`);
-      return;
-    }
-    router.refresh();
+    start(async () => {
+      const res = await actions[kind](id);
+      if (!res.ok) {
+        toast.error(`Silinemedi: ${res.error}`);
+        return;
+      }
+      toast.success("Silindi");
+      if (redirectTo) router.push(redirectTo);
+    });
   }
 
   return (
     <button
+      type="button"
       onClick={onDelete}
-      disabled={loading}
-      className="text-sm font-medium text-rose-600 hover:underline disabled:opacity-50 dark:text-rose-400"
+      disabled={pending}
+      className={cn(
+        "inline-flex min-h-9 items-center text-sm font-medium text-rose-600 hover:underline disabled:opacity-50 dark:text-rose-400",
+        className
+      )}
     >
-      {loading ? "Siliniyor…" : label}
+      {pending ? "Siliniyor…" : label}
     </button>
   );
 }

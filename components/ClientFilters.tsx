@@ -12,7 +12,7 @@ export default function ClientFilters({ params }: { params: P }) {
     <form
       method="get"
       action="/clients"
-      className="grid grid-cols-1 gap-3 rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900 sm:grid-cols-2 lg:grid-cols-4"
+      className="grid grid-cols-1 gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 dark:border-slate-800 dark:bg-slate-900 sm:grid-cols-2 lg:grid-cols-4"
     >
       <input
         name="q"

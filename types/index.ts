@@ -1,10 +1,20 @@
-// Domain types — DB şeması (supabase/schema.sql) ile birebir.
+// Domain types — DB şeması (lib/db/schema.sql) ile birebir.
+// JSON kolonlar (images, features, property_types, districts, reasons) repo
+// katmanında parse edilir; burada dizi olarak görünürler.
 
 export type ListingType = "satılık" | "kiralık";
 export type PropertyKind = "daire" | "villa" | "arsa";
 export type Currency = "TRY" | "USD" | "EUR";
 export type PropertyStatus = "aktif" | "pasif" | "satıldı";
 export type AppointmentStatus = "bekliyor" | "tamamlandı" | "iptal";
+export type DemandStatus = "aktif" | "pasif" | "karşılandı";
+export type MatchStatus = "yeni" | "iletildi" | "ilgileniyor" | "ilgilenmedi";
+export type ActivityKind =
+  | "arama"
+  | "görüşme"
+  | "yer gösterme"
+  | "mesaj"
+  | "not";
 export type ClientStage =
   | "yeni"
   | "ilgili"
@@ -22,9 +32,6 @@ export const CLIENT_STAGES: ClientStage[] = [
   "kaybedildi",
 ];
 
-// NOTE: bunlar `type` alias (interface değil). supabase-js GenericTable
-// Row/Insert/Update için Record<string, unknown> ister; interface'te örtük
-// index signature yok, tip `never`'a düşer. Object-literal type alias geçer.
 export type Property = {
   id: string;
   title: string;
@@ -40,6 +47,7 @@ export type Property = {
   description: string | null;
   image_url: string | null;
   images: string[];
+  features: string[];
   listing_url: string | null;
   owner_name: string | null;
   owner_phone: string | null;
@@ -52,13 +60,53 @@ export type Client = {
   full_name: string;
   phone: string | null;
   email: string | null;
-  budget_min: number | null;
-  budget_max: number | null;
-  looking_for: ListingType | null;
   stage: ClientStage;
   offer_property_id: string | null;
   offer_amount: number | null;
   notes: string | null;
+  created_at: string;
+};
+
+export type Demand = {
+  id: string;
+  client_id: string;
+  type: ListingType;
+  property_types: PropertyKind[];
+  city: string | null;
+  districts: string[];
+  budget_min: number | null;
+  budget_max: number | null;
+  currency: Currency;
+  rooms_min: number | null;
+  area_min: number | null;
+  area_max: number | null;
+  features: string[];
+  status: DemandStatus;
+  notes: string | null;
+  created_at: string;
+};
+
+export type Match = {
+  id: string;
+  demand_id: string;
+  property_id: string;
+  score: number;
+  reasons: string[];
+  misses: string[];
+  trigger: "ilan" | "talep";
+  status: MatchStatus;
+  seen_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type Activity = {
+  id: string;
+  client_id: string;
+  property_id: string | null;
+  kind: ActivityKind;
+  body: string | null;
+  occurred_at: string;
   created_at: string;
 };
 
@@ -71,33 +119,4 @@ export type Appointment = {
   notes: string | null;
   status: AppointmentStatus;
   created_at: string;
-};
-
-export type Database = {
-  public: {
-    Tables: {
-      properties: {
-        Row: Property;
-        Insert: Omit<Property, "id" | "created_at">;
-        Update: Partial<Omit<Property, "id" | "created_at">>;
-        Relationships: [];
-      };
-      clients: {
-        Row: Client;
-        Insert: Omit<Client, "id" | "created_at">;
-        Update: Partial<Omit<Client, "id" | "created_at">>;
-        Relationships: [];
-      };
-      appointments: {
-        Row: Appointment;
-        Insert: Omit<Appointment, "id" | "created_at">;
-        Update: Partial<Omit<Appointment, "id" | "created_at">>;
-        Relationships: [];
-      };
-    };
-    Views: Record<string, never>;
-    Functions: Record<string, never>;
-    Enums: Record<string, never>;
-    CompositeTypes: Record<string, never>;
-  };
 };

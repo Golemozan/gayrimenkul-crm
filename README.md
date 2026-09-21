@@ -2,90 +2,101 @@
 
 # 🏠 Gayrimenkul CRM
 
-**Gayrimenkul danışmanları için modern, açık kaynak müşteri & portföy yönetim paneli.**
+**Emlak danışmanları için portföy, müşteri talebi ve otomatik eşleştirme paneli.**
 
 ![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38BDF8?logo=tailwindcss&logoColor=white)
-![Supabase](https://img.shields.io/badge/Supabase-DB%20%26%20Storage-3FCF8E?logo=supabase&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-yerel-003B57?logo=sqlite&logoColor=white)
 
 </div>
 
 ---
 
-## ✨ Özellikler
+## Ne yapar?
+
+Emlakçı portföyünü ve müşterilerinin ne aradığını sisteme girer. Yeni bir ilan
+**veya** yeni bir talep kaydedildiğinde sistem tüm aktif kayıtları tarar ve
+"bu müşterinin kriterlerine uyan yeni bir ilan geldi" bildirimini üretir.
+Müşteriyle yapılan her arama, görüşme ve yer gösterme tek bir geçmişte toplanır.
 
 | | |
 |---|---|
-| 🏘️ **İlan Yönetimi** | Çoklu fotoğraf galerisi, tapu sahibi bilgisi, ilan linki, fiyat/oda/m² · ekle · düzenle · sil |
-| 👥 **Müşteri Yönetimi** | Bütçe, aradığı tip, teklif verdiği ilan, iletişim · ekle · sil |
-| 🎯 **Akıllı Eşleştirme** | Müşterinin bütçe ve tipine uyan aktif ilanları otomatik listeler |
-| 📊 **Satış Hunisi (Kanban)** | yeni → ilgili → görüştü → teklif → kazanıldı / kaybedildi |
-| 📅 **Randevular** | Müşteri + ilan eşleştirip tarih/saat/durum takibi · ekle · düzenle · sil |
-| 🔎 **Arama, Filtre & Sayfalama** | Şehir, fiyat aralığı, tür, durum, aşama filtreleri |
-| 📈 **Dashboard** | İstatistik kartları + ilan dağılım grafiği |
-| 📤 **Excel'e Aktarma** | İlan ve müşteri listelerini `.xlsx` indir |
-| 🌙 **Dark / Light Mod** | Kalıcı tema (localStorage), tüm arayüzde |
+| 🏘️ **Portföy** | Satılık/kiralık, il/ilçe, m², oda, fiyat, özellikler (otopark, asansör…), çoklu fotoğraf |
+| 🔎 **Müşteri talepleri** | Bir müşterinin birden fazla talebi: tür, il + birden çok ilçe, bütçe, en az oda, m² aralığı, istenen özellikler |
+| 🎯 **Otomatik eşleştirme** | İlan veya talep kaydedilince iki yönde çalışır; puan (0–100) + tutan/eksik kriterler |
+| 🔔 **Bildirim** | Zil sayacı, kayıt anında bildirim, Eşleşmeler sayfası, hazır mesajla **WhatsApp'tan gönder** |
+| 🗂️ **Görüşme geçmişi** | Arama, görüşme, yer gösterme, mesaj, not; tamamlanan randevu geçmişe kendiliğinden düşer |
+| 📊 **Panel** | Dönem karşılaştırmalı KPI'lar, eşleşme akışı, en yoğun gün, talep karşılama oranı |
+| 📈 **Satış hunisi** | yeni → ilgili → görüştü → teklif → kazanıldı / kaybedildi |
+| 🔐 **Giriş + yedek** | Şifreli giriş, günlük otomatik yedek (son 14 gün), tek tıkla yedek indirme, Excel'e aktarma |
 
-## 🧱 Teknolojiler
+## Eşleştirme nasıl çalışır?
 
-- **Next.js 14** (App Router, Server Components)
-- **TypeScript** · **Tailwind CSS**
-- **Supabase** — PostgreSQL veritabanı + Storage (görseller) + RLS
-- **xlsx** (Excel export) · **lucide-react** (ikonlar)
+`lib/matching.ts` — saf fonksiyonlar, veritabanı bilmez, birim testli.
 
-## 🚀 Kurulum
+**Sert filtreler** (biri tutmazsa eşleşme yok): ilan tipi, gayrimenkul türü, il ve
+seçili ilçeler, para birimi, fiyat `bütçe min` ile `bütçe max × 1.10` arasında,
+ilan ve talep aktif.
+
+**Puan:** bütçe 30 · oda 20 · m² 20 · istenen özellikler 30. Talepte boş bırakılan
+kriter tam puan alır; 50 puanın altı bildirim üretmez. Bütçeyi %10'a kadar aşan
+ilan "bütçenin %7 üstünde" notuyla, düşük puanla gelir.
 
 ```bash
-# 1) Klonla
-git clone https://github.com/OzanAkdnz/gayrimenkul-crm.git
+npm test   # eşleştirme motoru testleri (Node 24, ek bağımlılık yok)
+```
+
+## Kurulum
+
+Gereksinim: **Node.js 22.6+** (öneri 24).
+
+```bash
+git clone https://github.com/Golemozan/gayrimenkul-crm.git
 cd gayrimenkul-crm
-
-# 2) Bağımlılıklar
 npm install
-
-# 3) Ortam değişkenleri
-cp .env.example .env.local
-# .env.local içine kendi Supabase URL + anon key bilgilerini yaz
+npm run dev          # → http://localhost:3000
 ```
 
-### Veritabanı
+İlk açılışta **yönetici hesabı** oluşturma ekranı gelir. Başka ayar gerekmez:
 
-Supabase → **SQL Editor**'da çalıştır:
+- Veritabanı `data/crm.db` olarak ilk çalıştırmada oluşur.
+- Oturum anahtarı (`SESSION_SECRET`) ilk `npm run dev` / `npm start`'ta `.env.local`'a otomatik yazılır.
 
-1. `supabase/schema.sql` — tüm tablolar, storage bucket ve RLS politikaları
-2. Mevcut bir DB'yi güncelliyorsan: `supabase/migrations/` altındaki dosyalar
+Deneme verisiyle görmek için (yalnızca **boş** veritabanına basar):
 
 ```bash
-# 4) Geliştirme sunucusu
-npm run dev
-# → http://localhost:3000
+npm run seed
 ```
 
-## 📁 Proje Yapısı
+### Yayına alma
 
-```
-app/                 # App Router sayfaları (Panel, İlanlar, Müşteriler, Satış Hunisi, Randevular)
-components/          # UI bileşenleri, formlar, filtreler
-  └─ ui/             # shadcn tarzı bileşenler
-lib/supabase/        # Browser & server Supabase client'ları
-lib/utils.ts         # cn() yardımcı
-types/               # Domain tipleri + DB şeması
-supabase/            # schema.sql + migrations/
+```bash
+npm run build
+npm start
 ```
 
-## 🔐 Güvenlik Notu
+Veri dosya sisteminde durduğu için kalıcı diski olan bir sunucu gerekir
+(ör. Railway + volume). Veri klasörü `DATA_DIR` ortam değişkeniyle değiştirilir;
+HTTPS arkasında oturum cookie'si otomatik olarak `Secure` işaretlenir.
 
-> `schema.sql` içindeki RLS politikaları **DEMO** içindir (anon tam erişim).
-> Üretim öncesi kullanıcı girişi (auth) ekleyip `agent_id = auth.uid()` gibi
-> kurallarla kısıtlayın.
+## Proje yapısı
 
-- `.env.local` git'e **gönderilmez** (`.gitignore`).
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` zaten public/publishable bir anahtardır; asıl
-  koruma RLS politikalarındadır.
+```
+app/(app)/           Panel, İlanlar, Müşteriler, Eşleşmeler, Satış Hunisi, Randevular, Ayarlar
+app/(auth)/          Giriş ve ilk kurulum
+app/actions/         Server Actions (oturum kontrolü + zod doğrulama)
+app/api/             Görsel yükleme/sunma, yedek indirme
+lib/matching.ts      Eşleştirme motoru (+ matching.test.ts)
+lib/db/              SQLite bağlantısı, şema/migration, tablo başına sorgular
+lib/auth.ts          scrypt parola, HMAC imzalı oturum
+middleware.ts        Oturumsuz isteği /login'e yönlendirir
+scripts/             SESSION_SECRET üretimi, demo verisi
+```
 
----
+## Güvenlik notları
 
-<div align="center">
-Made with ❤️ + <a href="https://claude.com/claude-code">Claude Code</a>
-</div>
+- Parolalar `scrypt` ile tuzlanıp saklanır; giriş denemesi sınırı vardır.
+- Her yazma işlemi sunucuda ikinci kez oturum kontrolünden ve `zod` doğrulamasından geçer.
+- Yüklenen dosyanın gerçekten görsel olduğu içeriğinden kontrol edilir; görseller yalnızca oturum açıkken sunulur.
+- `.env.local` ve `data/` git'e gönderilmez.

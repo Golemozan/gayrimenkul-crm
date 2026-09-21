@@ -1,7 +1,9 @@
 import type {
   AppointmentStatus,
   ClientStage,
+  DemandStatus,
   ListingType,
+  MatchStatus,
   PropertyStatus,
 } from "@/types";
 
@@ -26,12 +28,26 @@ const map: Record<string, string> = {
   kazanıldı:
     "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
   kaybedildi: "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300",
+  // demand status
+  karşılandı:
+    "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
+  // match status
+  iletildi: "bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300",
+  ilgileniyor:
+    "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
+  ilgilenmedi: "bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300",
 };
 
 export default function StatusBadge({
   value,
 }: {
-  value: PropertyStatus | ListingType | AppointmentStatus | ClientStage;
+  value:
+    | PropertyStatus
+    | ListingType
+    | AppointmentStatus
+    | ClientStage
+    | DemandStatus
+    | MatchStatus;
 }) {
   const cls =
     map[value] ??

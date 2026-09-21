@@ -18,7 +18,7 @@ export default function PropertyFilters({ params }: { params: P }) {
     <form
       method="get"
       action="/properties"
-      className="grid grid-cols-1 gap-3 rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900 sm:grid-cols-2 lg:grid-cols-6"
+      className="grid grid-cols-1 gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 dark:border-slate-800 dark:bg-slate-900 sm:grid-cols-2 lg:grid-cols-6"
     >
       <input
         name="q"

@@ -3,8 +3,8 @@
 import { useState } from "react";
 import PropertyFormCore from "@/components/PropertyFormCore";
 
-export default function PropertyForm() {
-  const [open, setOpen] = useState(false);
+export default function PropertyForm({ defaultOpen = false }: { defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
 
   if (!open) {
     return (

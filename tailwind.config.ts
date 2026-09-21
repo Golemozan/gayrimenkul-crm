@@ -9,14 +9,17 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        sans: ["var(--font-inter)", "Segoe UI", "system-ui", "sans-serif"],
       },
       colors: {
+        // Tek aksan: referans panelin mavisi. Değiştirmek için yalnız burası.
         brand: {
-          DEFAULT: "#0f766e",
-          dark: "#115e59",
-          light: "#14b8a6",
+          DEFAULT: "#2563eb",
+          dark: "#1d4ed8",
+          light: "#60a5fa",
         },
+        // Panel zemini (açık tema)
+        canvas: "#f5f7fb",
         brass: {
           DEFAULT: "#b45309",
           light: "#f59e0b",

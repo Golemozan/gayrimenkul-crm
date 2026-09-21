@@ -22,7 +22,7 @@ export default function StatCard({
 }) {
   const a = accents[accent] ?? accents.brand;
   return (
-    <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
       {/* ledger accent bar */}
       <span className={`absolute inset-y-0 left-0 w-1 ${a.bar}`} />
       <div className="flex items-start justify-between">

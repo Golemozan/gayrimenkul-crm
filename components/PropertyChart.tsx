@@ -84,7 +84,7 @@ export default function PropertyChart({
   const typeMax = Math.max(1, ...types.map((t) => t.value));
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
       <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">
         İlan Dağılımı
       </h2>
