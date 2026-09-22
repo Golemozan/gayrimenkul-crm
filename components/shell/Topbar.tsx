@@ -8,6 +8,7 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import Sidebar, { type BackupInfo } from "@/components/shell/Sidebar";
 import { logoutAction } from "@/app/actions/auth";
 import { cn } from "@/lib/utils";
+import { DEMO } from "@/lib/demo";
 
 const iconBtn =
   "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800";
@@ -91,11 +92,15 @@ function UserMenu({ username }: { username: string }) {
           <Link role="menuitem" href="/settings" onClick={() => setOpen(false)} className="flex min-h-9 items-center gap-2 px-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800">
             <Settings className="h-4 w-4" /> Ayarlar
           </Link>
+          {DEMO ? (
+            <p className="px-3 py-2 text-xs text-slate-400">Demoda çıkış yok</p>
+          ) : (
           <form action={logoutAction}>
             <button role="menuitem" type="submit" className="flex min-h-9 w-full items-center gap-2 px-3 text-sm text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10">
               <LogOut className="h-4 w-4" /> Çıkış yap
             </button>
           </form>
+          )}
         </div>
       ) : null}
     </div>

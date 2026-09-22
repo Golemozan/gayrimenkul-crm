@@ -19,6 +19,7 @@ import {
   ROOM_OPTIONS,
 } from "@/lib/constants";
 import type { Property } from "@/types";
+import { DEMO } from "@/lib/demo";
 
 const MAX_MB = 5;
 type NewItem = { file: File; preview: string };
@@ -161,6 +162,11 @@ export default function PropertyFormCore({
           {items.map((it, i) => (
             <Thumb key={it.preview} src={it.preview} cover={kept.length === 0 && i === 0} onRemove={() => removeItem(i)} />
           ))}
+          {DEMO ? (
+            <div className="col-span-2 flex items-center rounded-lg border border-dashed border-slate-300 p-3 text-xs text-slate-400 dark:border-slate-700 sm:col-span-3">
+              Demoda fotoğraf yükleme kapalı.
+            </div>
+          ) : (
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
@@ -169,6 +175,7 @@ export default function PropertyFormCore({
             <Plus className="h-6 w-6" />
             <span className="text-[11px]">Ekle</span>
           </button>
+          )}
         </div>
       </div>
 

@@ -3,11 +3,22 @@
 // (lib/auth.ts) — Edge'de DB yok.
 import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE, verifySession } from "@/lib/session";
+import { DEMO } from "@/lib/demo";
 
 const PUBLIC = ["/login", "/setup"];
 
 export async function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
+  // Demo vitrini: giriş yok. Giriş/kurulum ekranları panele yönlendirir.
+  if (DEMO) {
+    if (pathname === "/login" || pathname === "/setup") {
+      const url = req.nextUrl.clone();
+      url.pathname = "/";
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
+    return NextResponse.next();
+  }
   if (PUBLIC.some((p) => pathname === p || pathname.startsWith(`${p}/`)))
     return NextResponse.next();
 

@@ -4,11 +4,17 @@ import "server-only";
 import Database from "better-sqlite3";
 import fs from "node:fs";
 import path from "node:path";
+import os from "node:os";
 import { randomUUID } from "node:crypto";
 import { MIGRATIONS } from "./schema";
+import { DEMO, DEMO_USER } from "@/lib/demo";
+import { seedDemo } from "@/lib/demo/seed";
 
+// Demoda veri geçici dizinde: sunucusuz ortamda tek yazılabilir yer orası ve
+// her soğuk açılışta temiz demo verisiyle başlamak zaten istenen davranış.
 export const DATA_DIR = path.resolve(
-  process.env.DATA_DIR || path.join(process.cwd(), "data")
+  process.env.DATA_DIR ||
+    (DEMO ? path.join(os.tmpdir(), "emlak-crm-demo") : path.join(process.cwd(), "data"))
 );
 export const DB_PATH = path.join(DATA_DIR, "crm.db");
 export const UPLOAD_DIR = path.join(DATA_DIR, "uploads");
@@ -33,6 +39,14 @@ function open() {
       db.exec(MIGRATIONS[v]);
       db.pragma(`user_version = ${v + 1}`);
     })();
+  }
+
+  if (DEMO) {
+    db.prepare(
+      `INSERT OR IGNORE INTO users (id, username, password_hash, created_at) VALUES (?, ?, 'demo-no-login', ?)`
+    ).run(DEMO_USER.id, DEMO_USER.username, new Date().toISOString());
+    const empty = !db.prepare(`SELECT 1 FROM properties UNION ALL SELECT 1 FROM clients LIMIT 1`).get();
+    if (empty) seedDemo(db);
   }
   return db;
 }

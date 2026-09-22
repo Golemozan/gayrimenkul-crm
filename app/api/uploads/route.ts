@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@/lib/auth";
 import { saveUpload } from "@/lib/uploads";
+import { DEMO } from "@/lib/demo";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   if (!(await currentUser()))
     return NextResponse.json({ error: "Yetkisiz" }, { status: 401 });
+
+  if (DEMO)
+    return NextResponse.json({ error: "Demoda fotoğraf yükleme kapalı" }, { status: 403 });
 
   const form = await req.formData();
   const file = form.get("file");

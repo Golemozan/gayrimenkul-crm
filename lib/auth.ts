@@ -5,6 +5,7 @@ import { randomBytes, scrypt as _scrypt, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
 import { db, newId, now } from "@/lib/db";
 import { SESSION_COOKIE, SESSION_DAYS, signSession, verifySession } from "@/lib/session";
+import { DEMO, DEMO_USER } from "@/lib/demo";
 
 const scrypt = promisify(_scrypt) as (
   pw: string,
@@ -45,6 +46,7 @@ export async function createUser(username: string, password: string) {
 }
 
 export async function verifyLogin(username: string, password: string) {
+  if (DEMO) return null;
   const u = db()
     .prepare(`SELECT id, username, password_hash FROM users WHERE username = ?`)
     .get(username) as (User & { password_hash: string }) | undefined;
@@ -57,6 +59,7 @@ export async function verifyLogin(username: string, password: string) {
 }
 
 export async function changePassword(uid: string, current: string, next: string) {
+  if (DEMO) return false;
   const u = db()
     .prepare(`SELECT password_hash FROM users WHERE id = ?`)
     .get(uid) as { password_hash: string } | undefined;
@@ -86,6 +89,11 @@ export function endSession() {
 }
 
 export async function currentUser(): Promise<User | null> {
+  // Demo vitrini: giriş yok, herkes aynı demo kullanıcısı (DB açılışında oluşturulur).
+  if (DEMO) {
+    db();
+    return { ...DEMO_USER };
+  }
   const p = await verifySession(cookies().get(SESSION_COOKIE)?.value);
   if (!p) return null;
   const u = db().prepare(`SELECT id, username FROM users WHERE id = ?`).get(p.uid) as

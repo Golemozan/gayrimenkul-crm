@@ -7,6 +7,7 @@ import { changePasswordAction } from "@/app/actions/auth";
 import { requireUser } from "@/lib/auth";
 import { listBackups } from "@/lib/backup";
 import { DATA_DIR } from "@/lib/db";
+import { DEMO } from "@/lib/demo";
 
 export const dynamic = "force-dynamic";
 
@@ -62,6 +63,11 @@ export default async function SettingsPage() {
         </Card>
 
         <div className="space-y-6">
+          {DEMO ? (
+            <Card title="Şifre değiştir">
+              <p className="p-5 text-sm text-slate-500 dark:text-slate-400">Demoda giriş ve şifre yok. Gerçek kurulumda ilk açılışta yönetici hesabı oluşturulur.</p>
+            </Card>
+          ) : (
           <Card title="Şifre değiştir">
             <div className="p-5">
               <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">
@@ -79,6 +85,7 @@ export default async function SettingsPage() {
               />
             </div>
           </Card>
+          )}
 
           <Card title="Excel'e aktar">
             <div className="flex flex-wrap gap-2 p-5">

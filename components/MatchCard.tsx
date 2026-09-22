@@ -13,6 +13,7 @@ import { waLink } from "@/lib/phone";
 import { cn } from "@/lib/utils";
 import type { MatchView } from "@/lib/db/matches";
 import type { MatchStatus } from "@/types";
+import { DEMO } from "@/lib/demo";
 
 function firstName(full: string) {
   return full.trim().split(/\s+/)[0] ?? full;
@@ -131,7 +132,20 @@ export default function MatchCard({
         ) : null}
 
         <div className="mt-3 flex flex-wrap items-center gap-1.5">
-          {wa ? (
+          {DEMO ? (
+            <Button
+              disabled={pending}
+              onClick={() => {
+                if (m.status === "yeni") set("iletildi");
+                toast.info("Demoda WhatsApp açılmaz. Gerçek kullanımda müşteriye hazır mesajla açılır.", {
+                  description: whatsappText(m),
+                });
+              }}
+            >
+              <MessageCircle className="h-4 w-4" />
+              WhatsApp&apos;tan gönder
+            </Button>
+          ) : wa ? (
             <a
               href={wa}
               target="_blank"
