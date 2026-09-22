@@ -26,14 +26,14 @@ import {
   weekdayLoad,
 } from "@/lib/db/dashboard";
 import { upcomingAppointments } from "@/lib/db/appointments";
-import { formatMoney } from "@/lib/constants";
+import { formatMoney, TZ } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 const RANGES = [7, 30, 90] as const;
-const fmtRange = new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "short", year: "numeric" });
-const fmtDay = new Intl.DateTimeFormat("tr-TR", { weekday: "short", day: "numeric", month: "short" });
+const fmtRange = new Intl.DateTimeFormat("tr-TR", { timeZone: TZ, day: "numeric", month: "short", year: "numeric" });
+const fmtDay = new Intl.DateTimeFormat("tr-TR", { timeZone: TZ, weekday: "short", day: "numeric", month: "short" });
 
 function Panel({
   title,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Select, Textarea } from "@/components/FormFields";
 import { Button, Notice } from "@/components/primitives";
@@ -19,7 +19,9 @@ function localNow() {
 export default function ActivityForm({ clientId, properties }: { clientId: string; properties: Option[] }) {
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
-  const [when, setWhen] = useState(localNow);
+  // Sunucu başka saat diliminde render ederse değer tutmaz: tarayıcıda doldur.
+  const [when, setWhen] = useState("");
+  useEffect(() => setWhen(localNow()), []);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

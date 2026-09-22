@@ -1,3 +1,4 @@
+import { TZ } from "@/lib/constants";
 import { Database, Download } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import AuthForm from "@/components/AuthForm";
@@ -11,7 +12,7 @@ import { DEMO } from "@/lib/demo";
 
 export const dynamic = "force-dynamic";
 
-const fmt = new Intl.DateTimeFormat("tr-TR", { dateStyle: "medium", timeStyle: "short" });
+const fmt = new Intl.DateTimeFormat("tr-TR", { timeZone: TZ, dateStyle: "medium", timeStyle: "short" });
 const kb = (n: number) => `${Math.max(1, Math.round(n / 1024))} KB`;
 
 export default async function SettingsPage() {

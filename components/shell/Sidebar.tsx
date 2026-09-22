@@ -1,5 +1,6 @@
 "use client";
 
+import { TZ } from "@/lib/constants";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { DatabaseBackup } from "lucide-react";
@@ -50,7 +51,7 @@ function Item({ item, pathname, unseen, onNavigate }: { item: NavItem; pathname:
   );
 }
 
-const fmt = new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+const fmt = new Intl.DateTimeFormat("tr-TR", { timeZone: TZ, day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
 export default function Sidebar({
   unseen,

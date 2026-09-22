@@ -1,3 +1,4 @@
+import { TZ } from "@/lib/constants";
 import Link from "next/link";
 import AppointmentForm from "@/components/AppointmentForm";
 import DeleteButton from "@/components/DeleteButton";
@@ -10,7 +11,7 @@ import { propertyOptions } from "@/lib/db/properties";
 
 export const dynamic = "force-dynamic";
 
-const fmtDay = new Intl.DateTimeFormat("tr-TR", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+const fmtDay = new Intl.DateTimeFormat("tr-TR", { timeZone: TZ, weekday: "short", day: "numeric", month: "short", year: "numeric" });
 
 export default function AppointmentsPage() {
   const appointments = listAppointments();

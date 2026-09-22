@@ -1,11 +1,12 @@
 "use client";
 
+import { TZ } from "@/lib/constants";
 import { Area, AreaChart, CartesianGrid, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 type Point = { day: string; current: number; previous: number };
 
 const dayLabel = (d: string) =>
-  new Date(`${d}T12:00`).toLocaleDateString("tr-TR", { day: "numeric", month: "short" });
+  new Date(`${d}T12:00`).toLocaleDateString("tr-TR", { timeZone: TZ, day: "numeric", month: "short" });
 
 // Grafik renkleri Tailwind token'larıyla aynı: brand #2563eb, slate-400 #94a3b8.
 const BRAND = "#2563eb";

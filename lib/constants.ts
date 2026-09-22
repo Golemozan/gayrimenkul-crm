@@ -60,6 +60,11 @@ export const ROOM_OPTIONS = [
   "6+1",
 ];
 
+// Tüm tarih/saat biçimleri bu saat diliminde yazılır: sunucu UTC'de çalışsa bile
+// (Vercel/Railway) ekrandaki saat Türkiye saati olur ve sunucu ile tarayıcı aynı
+// metni üretir (aksi halde React hydration uyuşmazlığı).
+export const TZ = "Europe/Istanbul";
+
 export function currencySymbol(c: Currency) {
   return c === "USD" ? "$" : c === "EUR" ? "€" : "₺";
 }

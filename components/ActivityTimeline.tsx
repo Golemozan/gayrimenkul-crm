@@ -1,3 +1,4 @@
+import { TZ } from "@/lib/constants";
 import Link from "next/link";
 import { CalendarClock, Eye, History, MessageCircle, Phone, StickyNote, Users } from "lucide-react";
 import DeleteButton from "@/components/DeleteButton";
@@ -20,13 +21,14 @@ type Item =
   | { t: "appointment"; at: number; a: AppointmentView };
 
 const fmt = new Intl.DateTimeFormat("tr-TR", {
+  timeZone: TZ,
   day: "numeric",
   month: "short",
   year: "numeric",
   hour: "2-digit",
   minute: "2-digit",
 });
-const fmtDay = new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "short", year: "numeric" });
+const fmtDay = new Intl.DateTimeFormat("tr-TR", { timeZone: TZ, day: "numeric", month: "short", year: "numeric" });
 
 /**
  * Müşteriyle yaşanan her şey tek akışta: elle girilen aktiviteler + randevular.
